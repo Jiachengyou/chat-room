@@ -11,21 +11,30 @@ import random
 from progress.bar import (FillingSquaresBar,PixelBar)
 
 '''YOUR FTP SERVER DETAILS'''
-ftp=FTP('yourdomain.com')
-ftp.login(user="xxxxxxxxx",passwd="***************")
+ftp=FTP('192.168.136.1')
+ftp.login()
+# user="root",passwd="123456"
 
-ftp.cwd('/terminal_chat_ftp_server/')
+ftp.cwd('./')
+
+def new_room(chatroom):
+    ftp.mkd(chatroom)
+    print("make new chatroom file dir")
+    ftp.quit()
 
 TEMP=colored("WARNING","red")
 print(" [system]: "+TEMP+": Files can be exchanged between 2 users only")
 global flnm
+
 flnm=""
 def sleep():
     t = 0.1
     t += t * random.uniform(-0.1, 0.1)  # Add some variance
     time.sleep(t)
 
-def dwnldfile():
+def dwnldfile(chatroom):
+    ftp.cwd(chatroom)
+    ftp.dir()
     filename=input(colored(" [system]: filename: ","white"))
     time.sleep(1)
     ################################
@@ -45,7 +54,8 @@ def dwnldfile():
     localfile.close()
     
  
-def uploadfile():
+def uploadfile(chatroom):
+    ftp.cwd(chatroom)
     filename = input(colored(" [system]: filename: ","white"))
     flnm=filename
     time.sleep(1)
@@ -64,9 +74,12 @@ def uploadfile():
             time.sleep(1.2)
             print("")
             print(colored(" [system]: file uploded","white"))
+            ftp.cwd("./../")
             ftp.quit()
         else:
             print(" [system]: operartion aborted")
+            ftp.cwd("./../")
             ftp.quit()
     else:
         print(" [system]: ERROR ! no such file named {} exists.".format(filename))
+

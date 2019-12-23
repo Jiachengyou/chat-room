@@ -1,13 +1,13 @@
 import mysql.connector
-
-'''YOUR DATABASE DETAILS'''
+import os
 user_db=mysql.connector.connect(
-    host="xxxxxxx",
-    user="xxxxxxx",
-    passwd="***************",
-    database="xxxxxxxx"
-
+    host=os.getenv('HOST', None),
+    port=3306,
+    user="root",
+    password=os.getenv('PASSWORD', None),
+    database="user_info",
 )
+
 
 user_details=user_db.cursor()
 

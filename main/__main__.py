@@ -2,25 +2,29 @@ from __future__ import print_function, unicode_literals
 import os
 import colour 
 import getpass
-from pyfiglet import Figlet
 import sys
-from PyInquirer import style_from_dict, Token, prompt
 import time
 import login_auth_reg
-from termcolor import colored,cprint
-from pusher import Pusher
-import pysher
-from dotenv import load_dotenv
 import json
 import chatrooms_server
 import getpass
 import random
-
-from progress.bar import FillingCirclesBar
 from os import path
 import env_platform
 
-load_dotenv(dotenv_path='.env')
+# add
+from pyfiglet import Figlet 
+from PyInquirer import style_from_dict, Token, prompt
+from termcolor import colored,cprint
+from pusher import Pusher
+import pysher
+from dotenv import load_dotenv
+from progress.bar import FillingCirclesBar
+
+
+
+
+load_dotenv(dotenv_path='./.env')
 
 class TerminalChat():
 
@@ -195,13 +199,15 @@ class TerminalChat():
     def chatselector(self):
         
         chatroom=input(" Enter the ChatSpace Secure Code: ")
-    
+        print(self.chatrooms)
         if chatroom in self.chatrooms:
             print("")
         else:
             cprint(" New ChatSpace code is detected !!!","red")
+            import ftpserver
             time.sleep(1)
-            chatrooms_server.new_room(chatroom,0)
+            chatrooms_server.new_room(chatroom)
+            ftpserver.new_room(chatroom)
             print("")
             self.clear()
             
@@ -233,49 +239,57 @@ class TerminalChat():
         self.clientPusher.connection.bind('pusher:connection_established', self.connectHandler)
         self.clientPusher.connect()
     
-    def connectHandler(self, data):
-        self.channel = self.clientPusher.subscribe(self.chatroom)
-        self.channel.bind('newmessage', self.pusherCallback)
-
     def pusherCallback(self, message):
-        from playsound import playsound
+        # from playsound import playsound
         formate="["+self.user+"]: "
         message = json.loads(message)
         if message['user'] != self.user:
             print(colored("[{}]: {}".format(message['user'], message['message']), "yellow"))
-            playsound('intuition.mp3')
+            # playsound('intuition.mp3')
             print(colored(formate,"green"))
-    
+
+    def connectHandler(self, data):
+        self.channel = self.clientPusher.subscribe(self.chatroom)
+        self.channel.bind('myevent', self.pusherCallback)
+
+  
+        
     def getInput(self):
         
         formate="["+self.user+"]: "
         message = input(colored(formate,"green"))
         if message=="send file" or message=="sdf":
             import ftpserver
-            os.chdir('C:\\TCN_To_Be_Upload')
+            file_path = input("input file dir:")
+            os.chdir(file_path)
             time.sleep(0.5)
             print("")
             os.system('dir')
             print("")
-            flt=ftpserver.uploadfile()
+            flt=ftpserver.uploadfile(self.chatroom)
             message=formate+"file is uploaded.[filename = {}]".format(flt)
             os.chdir(self.temp_dir)
         if message=='download file' or message=='ddf':
-            os.chdir('C:\\TCN_Downloads')
+            os.chdir('./')
             import ftpserver
-            ftpserver.dwnldfile()
+            ftpserver.dwnldfile(self.chatroom)
             os.chdir(self.temp_dir)
             message="........."
         if message=='exit':
             self.clear()
             self.main()
         if message=='open file':
-            os.chdir('C:\\TCN_Downloads')
+            os.chdir('./')
+            os.system('dir')
             fl=input(" [system]: filename -> ")
             os.system(fl)
             os.chdir(self.temp_dir)
             message="......."
-        self.pusher.trigger(self.chatroom, u'newmessage', {"user": self.user, "message": message})
+        if message=='get history' or 'his':
+            chatrooms_server.get_message(self.chatroom)
+        self.pusher.trigger(self.chatroom, u'myevent', {"user": self.user, "message": message})
+        val = (0, self.chatroom, self.user, message)
+        chatrooms_server.insert_message(val)
 
     def about(self):
         print("")
