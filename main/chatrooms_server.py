@@ -5,13 +5,12 @@ from termcolor import colored,cprint
 '''YOUR DATABASE DETAILS'''
 chatroom_serv=mysql.connector.connect(
     host=os.getenv('HOST', None),
-    user='root',
-    # user=os.getenv('USER', None),
+    user=os.getenv("USER", None),
     passwd=os.getenv('PASSWORD', None),
-    # database=os.getenv('DATABASE', None)
+
     database = 'user_info'
 )
-print(os.getenv('USER', None))
+# print(os.getenv('USER', None))
 
 rooms=chatroom_serv.cursor()
 
@@ -36,7 +35,7 @@ def insert_message(val):
     chatroom_serv.commit()
 
 def get_message(chatroom):
-    print("Message history:")
+    # print("Message history:")
     # fuck this bug
     sql = "SELECT user, message FROM messages WHERE server_rooms = '{0}'".format(chatroom)
     rooms.execute(sql)

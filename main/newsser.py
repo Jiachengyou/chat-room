@@ -1,13 +1,16 @@
 from ftplib import FTP
 import os
-
+import env_platform
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='./.env')
 def newsse():
     ly=[]   
     '''YOUR FTP DETAILS'''
-    ftp=FTP('192.168.136.1')
+    ftp=FTP(os.getenv("FTP"))
     ftp.login()
     # user="root",passwd="123456"
     ftp.cwd('./')
+    # print(ftp.dir)
 
     # os.chdir(os.getcwd()+'\\xxxxxxxxx')
     filename = "1.txt"

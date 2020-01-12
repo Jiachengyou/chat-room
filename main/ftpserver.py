@@ -7,23 +7,27 @@ from termcolor import colored
 import os
 import time
 import random
+import env_platform
+from dotenv import load_dotenv
 
 from progress.bar import (FillingSquaresBar,PixelBar)
 
 '''YOUR FTP SERVER DETAILS'''
-ftp=FTP('192.168.136.1')
-ftp.login()
+
 # user="root",passwd="123456"
 
-ftp.cwd('./')
+# ftp.cwd('./')
+load_dotenv(dotenv_path='./.env')
 
 def new_room(chatroom):
+    ftp=FTP(os.getenv("FTP", None))
+    ftp.login()
     ftp.mkd(chatroom)
     print("make new chatroom file dir")
     ftp.quit()
 
-TEMP=colored("WARNING","red")
-print(" [system]: "+TEMP+": Files can be exchanged between 2 users only")
+# TEMP=colored("WARNING","red")
+# print(" [system]: "+TEMP+": Files can be exchanged between 2 users only")
 global flnm
 
 flnm=""
@@ -33,8 +37,11 @@ def sleep():
     time.sleep(t)
 
 def dwnldfile(chatroom):
-    ftp.cwd(chatroom)
-    ftp.dir()
+    ftp=FTP(os.getenv("FTP", None))
+    ftp.login()
+    print(chatroom)
+    ftp.cwd("./"+chatroom)
+    print(ftp.dir())
     filename=input(colored(" [system]: filename: ","white"))
     time.sleep(1)
     ################################
@@ -50,12 +57,16 @@ def dwnldfile(chatroom):
     print(" ")
     time.sleep(0.9)
     print(colored(" [system]: file downloaded","white"))
-    ftp.quit()
+    ftp.cwd("./../")
     localfile.close()
+    ftp.quit()
+
     
  
 def uploadfile(chatroom):
-    ftp.cwd(chatroom)
+    ftp=FTP(os.getenv("FTP", None))
+    ftp.login()
+    ftp.cwd("./"+chatroom)
     filename = input(colored(" [system]: filename: ","white"))
     flnm=filename
     time.sleep(1)
@@ -80,6 +91,7 @@ def uploadfile(chatroom):
             print(" [system]: operartion aborted")
             ftp.cwd("./../")
             ftp.quit()
+            ftp
     else:
         print(" [system]: ERROR ! no such file named {} exists.".format(filename))
 

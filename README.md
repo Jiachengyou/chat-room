@@ -1,29 +1,36 @@
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](http://ayanbag.github.io)
-[![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](http://ayanbag.github.io)
+# NTU Computer Network Final Project
 
-``TERMINAL CHAT``
-===================
-It is prototype of console chating apps like the one we saw in Die Hard 4. I call this app TERMINAL CHAT NETWORK. It can send any time of file in the given ChatSpace and those how are in the given ChatSpace can download it.
+### Run environment
+    python 3.6
+    pyfiglet 0.8.post1
+    PyInquirer 1.0.3
+    termcolor 1.1.0
+    pusher 2.1.4
+    pysher 1.0.4
+    python-dotenv 0.10.3
+    progress 1.5
+    
+### Environment variable
+    please update ./.env to fill your variable
+    ./.env
+    //Puser
+    PUSHER_APP_ID="922078"
+    PUSHER_APP_KEY="aebffcc080283e7e220d"
+    PUSHER_APP_SECRET="4a393d432cf9de8e8343"
+    PUSHER_APP_CLUSTER="ap3"
+    //sql
+    PORT="3306"
+    PASSWORD=""
+    USER="root"
+    DATABASE="user_info"
+    //ftp server
+    FTP=""
+    
+### SQL
+    sql file is user_info.sql.
+    please run it in your sql server.
 
-What is ChatSpace?
+### run 
+    bash ./main.sh
 
-
-It is nothing but rooms for personal chats. Unlimited user can join a given ChatSpace.
-
-``Demo of Terminal Chat Network``
-
-
-
-
-
-[![](http://img.youtube.com/vi/wy43hNxlfKg/0.jpg)](http://www.youtube.com/watch?v=wy43hNxlfKg "")
-
-
-
-``UPDATES``
-
-
-v1.1 : In App File viewing feature and realtime news display features is added.
-
-
-v1.2 : Support for linux system is added.
+    

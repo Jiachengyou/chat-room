@@ -1,9 +1,12 @@
 import mysql.connector
 import os
+import env_platform
+from dotenv import load_dotenv
+load_dotenv(dotenv_path='./.env')
 user_db=mysql.connector.connect(
     host=os.getenv('HOST', None),
-    port=3306,
-    user="root",
+    port=os.getenv('PORT'),
+    user=os.getenv('USER'),
     password=os.getenv('PASSWORD', None),
     database="user_info",
 )
@@ -13,8 +16,8 @@ user_details=user_db.cursor()
 
 def register( user_idf,name,username,passwd):
 
-    sql="INSERT INTO user_info.user (user_id,name,username,passwod) VALUES (%s, %s, %s, %s)"
-    val=(user_idf,name,username,passwd)
+    sql="INSERT INTO user_info.user (name,username,passwod) VALUES (%s, %s, %s)"
+    val=(name,username,passwd)
     
     try:
         user_details.execute(sql,val)
@@ -46,6 +49,11 @@ def searchuser_password():
     user_details.execute("SELECT username,passwod FROM user_info.user")
     userinfo=user_details.fetchall()
     return userinfo
+
+# def searchuser_password():
+#     user_details.execute("SELECT username,passwod FROM user_info.user")
+#     userinfo=user_details.fetchall()
+#     return userinfo
 
 '''
 a=dict()
